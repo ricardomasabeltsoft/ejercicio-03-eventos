@@ -317,3 +317,71 @@ Por fin, con este paso tenemos nuestro entorno listo para proceder con el desarr
 20. Volvemos a nuestra pestaña **Actions** y, efectivamente, no hay nuevas ejecuciones de nuestro workflow.
     
     ![No hay nuevas ejecuciones de nuestro workflow](img/new-workflow-run.png)
+
+## Desarrollo del ejercicio - Pull Requests entre Repositorios (Opcional)
+
+21. Para simular un colaborador externo, procedemos a crear otro fork desde nuestro repositorio, pero esta vez utilizando otra cuenta personal.
+   
+   	![Crear fork](img/fork-repo-2.png)
+
+22. Luego, en los detalles del fork, seleccionamos nuestra segunda cuenta personal en el desplegable de **Owner** y nos aseguramos que el nombre del repositorio está disponible y con el mensaje en verde, y hacemos clic en el botón verde **Create fork**.
+   
+   	![Detalles del fork](img/fork-details-2.png)
+
+23. Una vez cargue nuestro nuevo repositorio, lanzamos nuevamente un Codespace en el contexto de este repositorio.
+   
+   	![Crear codespace](img/create-codespace-2.png)
+
+24. Hacemos un pequeño cambio en el encabezado en nuestro archivo **main.jsx** ubicado en la carpeta **src**. [Gist Paso 24](https://gist.github.com/ricardomasabeltsoft/49fb5e1d90b0e0ea1eea3972a4bccaac)
+
+    <pre>
+    import React from 'react';
+    import ReactDOM from 'react-dom/client';
+
+    import App from './App';
+    import './index.css';
+
+    <span style="color:Navy;"><b>// Esto es un comentario</b></span>
+
+    ReactDOM.createRoot(document.getElementById('root')).render(
+    ...
+    </pre>
+   
+25. Sincronizamos nuestros cambios hacia una nueva rama en el repositorio con los siguientes comandos:
+   
+    <pre>
+    git checkout -b un-comentario
+    git add .
+    git commit -m "Comentario agregado"
+    git push origin un-comentario
+    </pre>
+
+26. Volvemos a nuestro repositorio, a la pestaña **Code** y veremos una notificación de push reciente a la rama **un-comentario**, y hacemos clic en el botón verde **Compare & pull request**.
+   
+    ![Notificación de push reciente a un-comentario](img/dev-recent-push-2.png)
+
+27. En la configuración de este nuevo pull request, a diferencia de los casos anteriores, ya no es necesario cambiar los datos del owner, porque en este caso sí queremos realizar el pull request entre repositorios diferentes. Así, en la vista de comparación de cambios directamente confirmamos la creación del pull request dando clic en el botón verde **Create pull request**.
+   
+    ![Comparación de cambios](img/comparing-changes-2.png)
+
+28. Volvemos ahora al contexto de nuestro repositorio original, a la pestaña **Actions** y ahora sí vemos la nueva ejecución asociada al crear el pull request, pero con un ícono de adevertencia.
+   
+    ![Nueva ejecución de nuestro workflow](img/new-workflow-run-2.png)
+
+    Esto indica que dicha ejecución se quedó en un estado pendiente, pero no ha procedido. Hacemos clic en el nombre de nuestra ejecución pendiente (**Comentario agregado**) para ver los detalles de dicha ejecución.
+
+29. Una vez en los detalles de dicha ejecución, encontraremos una sección nueva con el botón de **Approve and run**, que permitirá que este usuario pueda gatillar esta y futuras ejecuciones del workflow.
+   
+    ![Ejecución pendiente de aprobación](img/workflow-pending-for-approval.png)
+
+    Hacemos clic en el botón **Approve and run** para proceder con la ejecución.
+
+30. Efectivamente, el workflow procederá a ejecutarse y a darnos un resultado (exitoso en este caso).
+   
+    ![Ejecución de workflow aprobada](img/workflow-approved.png)
+
+31. Este proceso de aprobación se aplicará a cualquier usuario externo desconocido. Sin embargo, existe la opción de agregar colaboradores externos a nuestros repositorios. Esto lo encontraremos yendo a la sección **Settings** y luego a **Collaborators**.
+   
+    ![Ejecución de workflow aprobada](img/collaborators-settings.png)
+
+    Una vez agreguemos aquí a un colaborador, sus pull requests no requerirán de nuestra aprobación para ser ejecutados, debido a que se entiende que son usuarios de confianza.
