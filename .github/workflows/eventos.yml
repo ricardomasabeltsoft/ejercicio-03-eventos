@@ -1,5 +1,21 @@
 name: Ejercicio con Eventos
-on: ...
+on:
+  pull_request:
+    types:
+      - opened
+    branches:
+      - main # main
+      - 'dev-*' # dev-nuevo dev-esto-es-nuevo
+      - 'feat/**' # feat/nuevo feat/nuevo/boton
+  workflow_dispatch:
+  push:
+    branches:
+      - main # main
+      - 'dev-*' # dev-nuevo dev-esto-es-nuevo
+      - 'feat/**' # feat/nuevo feat/nuevo/boton
+      # developer-1
+    paths-ignore:
+      - '.github/workflows/*'
 jobs:
   deploy:
     runs-on: ubuntu-latest
