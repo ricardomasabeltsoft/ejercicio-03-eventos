@@ -1,4 +1,4 @@
-name: Ejercicio con Eventos
+name: Adicion de Actividades
 on:
   pull_request:
     types:
