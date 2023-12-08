@@ -158,9 +158,9 @@ A continuación tenemos 2 secciones claramente diferenciadas. La primera detalla
 
 Por fin, con este paso tenemos nuestro entorno listo para proceder con el desarrollo del ejercicio a continuación.
 
-## Desarrollo del ejercicio
+## Desarrollo del ejercicio - Tipos de Actividad
 
-1. Para iniciar el desarrollo del ejercicio, actualizamos nuestro documento de workflow reemplazando el contenido de la directiva **on**:
+1. Para iniciar el desarrollo del ejercicio, actualizamos nuestro documento de workflow reemplazando el contenido de la directiva **on**:  [Gist Paso 1](https://gist.github.com/ricardomasabeltsoft/97af3e34900151a1e16214a80d5bdfa4)
    
    	<pre>
     name: Ejercicio con Eventos
@@ -202,7 +202,7 @@ Por fin, con este paso tenemos nuestro entorno listo para proceder con el desarr
    <pre>
    git checkout -b dev</pre>
 
-5. Hacemos un pequeño cambio en el encabezado en nuestro archivo **App.jsx**.
+5. Hacemos un pequeño cambio en el encabezado en nuestro archivo **App.jsx**. [Gist Paso 5](https://gist.github.com/ricardomasabeltsoft/83c123fc6549e6f8dcb2d85c157ba5e6)
 
    ```
    import MainContent from './components/MainContent';
@@ -265,4 +265,123 @@ Por fin, con este paso tenemos nuestro entorno listo para proceder con el desarr
     ![Detalles del pull request](img/pull-request-closed.png)
 
 15. Volvemos a nuestra pestaña **Actions** y, efectivamente, no hay nuevas ejecuciones.
+    
     ![No hay nuevas ejecuciones de nuestro workflow](img/new-workflow-run.png)
+
+## Desarrollo del ejercicio - Filtros de Eventos
+
+16. Para continuar con el ejercicio, volvemos a nuestro ambiente de desarrollo creado en la clase anterior.
+   
+    ![Codespaces existentes](img/existing-codespaces.png)
+
+17. Nos aseguramos de cambiar de contexto a la rama **main** mientras mantenemos los cambios actualizados.
+   
+    <pre>
+    git fetch
+    git checkout main
+    git pull
+    </pre>
+
+18. Actualizamos la definición de nuestro workflow añadiendo los filtros de ramas y de rutas a los eventos **pull_request** y **push**. [Gist Paso 18](https://gist.github.com/ricardomasabeltsoft/9fd2eec9a9e28dc4b84e1d846d91f443)
+
+    <pre>
+    name: Ejercicio con Eventos
+    on:
+      <span style="color:Navy;"><b>pull_request:
+        types:
+          - opened
+        branches:
+          - main # main
+          - 'dev-*' # dev-nuevo dev-esto-es-nuevo
+          - 'feat/**' # feat/nuevo feat/nuevo/boton
+      workflow_dispatch:
+      push:
+        branches:
+          - main # main
+          - 'dev-*' # dev-nuevo dev-esto-es-nuevo
+          - 'feat/**' # feat/nuevo feat/nuevo/boton
+          # developer-1
+        paths-ignore:
+          - '.github/workflows/*'</b></span>
+    jobs:
+      ...</pre>
+   
+19. Pusheamos nuestros cambios hacia nuestra rama **main**:
+   
+   <pre>
+   git add .
+   git commit -m "Workflow actualizado"
+   git push
+   </pre>
+
+20. Volvemos a nuestra pestaña **Actions** y, efectivamente, no hay nuevas ejecuciones de nuestro workflow.
+    
+    ![No hay nuevas ejecuciones de nuestro workflow](img/new-workflow-run.png)
+
+## Desarrollo del ejercicio - Pull Requests entre Repositorios (Opcional)
+
+21. Para simular un colaborador externo, procedemos a crear otro fork desde nuestro repositorio, pero esta vez utilizando otra cuenta personal.
+   
+   	![Crear fork](img/fork-repo-2.png)
+
+22. Luego, en los detalles del fork, seleccionamos nuestra segunda cuenta personal en el desplegable de **Owner** y nos aseguramos que el nombre del repositorio está disponible y con el mensaje en verde, y hacemos clic en el botón verde **Create fork**.
+   
+   	![Detalles del fork](img/fork-details-2.png)
+
+23. Una vez cargue nuestro nuevo repositorio, lanzamos nuevamente un Codespace en el contexto de este repositorio.
+   
+   	![Crear codespace](img/create-codespace-2.png)
+
+24. Hacemos un pequeño cambio en el encabezado en nuestro archivo **main.jsx** ubicado en la carpeta **src**. [Gist Paso 24](https://gist.github.com/ricardomasabeltsoft/49fb5e1d90b0e0ea1eea3972a4bccaac)
+
+    <pre>
+    import React from 'react';
+    import ReactDOM from 'react-dom/client';
+
+    import App from './App';
+    import './index.css';
+
+    <span style="color:Navy;"><b>// Esto es un comentario</b></span>
+
+    ReactDOM.createRoot(document.getElementById('root')).render(
+    ...
+    </pre>
+   
+25. Sincronizamos nuestros cambios hacia una nueva rama en el repositorio con los siguientes comandos:
+   
+    <pre>
+    git checkout -b un-comentario
+    git add .
+    git commit -m "Comentario agregado"
+    git push origin un-comentario
+    </pre>
+
+26. Volvemos a nuestro repositorio, a la pestaña **Code** y veremos una notificación de push reciente a la rama **un-comentario**, y hacemos clic en el botón verde **Compare & pull request**.
+   
+    ![Notificación de push reciente a un-comentario](img/dev-recent-push-2.png)
+
+27. En la configuración de este nuevo pull request, a diferencia de los casos anteriores, ya no es necesario cambiar los datos del owner, porque en este caso sí queremos realizar el pull request entre repositorios diferentes. Así, en la vista de comparación de cambios directamente confirmamos la creación del pull request dando clic en el botón verde **Create pull request**.
+   
+    ![Comparación de cambios](img/comparing-changes-2.png)
+
+28. Volvemos ahora al contexto de nuestro repositorio original, a la pestaña **Actions** y ahora sí vemos la nueva ejecución asociada al crear el pull request, pero con un ícono de adevertencia.
+   
+    ![Nueva ejecución de nuestro workflow](img/new-workflow-run-2.png)
+
+    Esto indica que dicha ejecución se quedó en un estado pendiente, pero no ha procedido. Hacemos clic en el nombre de nuestra ejecución pendiente (**Comentario agregado**) para ver los detalles de dicha ejecución.
+
+29. Una vez en los detalles de dicha ejecución, encontraremos una sección nueva con el botón de **Approve and run**, que permitirá que este usuario pueda gatillar esta y futuras ejecuciones del workflow.
+   
+    ![Ejecución pendiente de aprobación](img/workflow-pending-for-approval.png)
+
+    Hacemos clic en el botón **Approve and run** para proceder con la ejecución.
+
+30. Efectivamente, el workflow procederá a ejecutarse y a darnos un resultado (exitoso en este caso).
+   
+    ![Ejecución de workflow aprobada](img/workflow-approved.png)
+
+31. Este proceso de aprobación se aplicará a cualquier usuario externo desconocido. Sin embargo, existe la opción de agregar colaboradores externos a nuestros repositorios. Esto lo encontraremos yendo a la sección **Settings** y luego a **Collaborators**.
+   
+    ![Ejecución de workflow aprobada](img/collaborators-settings.png)
+
+    Una vez agreguemos aquí a un colaborador, sus pull requests no requerirán de nuestra aprobación para ser ejecutados, debido a que se entiende que son usuarios de confianza.
